@@ -20,7 +20,7 @@ class DataTransformation:
                  data_transformation_config: DataTransformationConfig,
                  data_validation_artifact: DataValidationArtifact):
         """
-        Initializes the DataTransformation class with required artifacts and schema configuration.
+        Initialize the DataTransformation class with necessary artifacts and configurations.
         """
         try:
             self.data_ingestion_artifact = data_ingestion_artifact
@@ -33,7 +33,7 @@ class DataTransformation:
     @staticmethod
     def read_data(file_path: str) -> pd.DataFrame:
         """
-        Reads a CSV file and returns a pandas DataFrame.
+        Read CSV data from the given file path.
         """
         try:
             return pd.read_csv(file_path)
@@ -42,87 +42,89 @@ class DataTransformation:
 
     def get_data_transformer_object(self) -> Pipeline:
         """
-        Creates and returns a preprocessing pipeline for numerical and categorical features.
+        Create and return a data transformation pipeline.
         """
         try:
-            logging.info("Initializing data transformation pipeline.")
-            
-            # Define individual transformations
-            numeric_transformer = StandardScaler()
-            oh_transformer = OneHotEncoder()
-            ordinal_encoder = OrdinalEncoder()
-            transform_pipe = Pipeline(steps=[('power_transformer', PowerTransformer(method='yeo-johnson'))])
-            
-            # Extract feature categories from schema config
+            logging.info("Creating data transformation pipeline")
+
+            # Load column details from schema
             oh_columns = self._schema_config['oh_columns']
             or_columns = self._schema_config['or_columns']
             transform_columns = self._schema_config['transform_columns']
             num_features = self._schema_config['num_features']
-            
-            # Create a column transformer with different feature transformations
+
+            # Define individual transformers
+            numeric_transformer = StandardScaler()
+            oh_transformer = OneHotEncoder()
+            ordinal_encoder = OrdinalEncoder()
+            transform_pipe = Pipeline(steps=[('transformer', PowerTransformer(method='yeo-johnson'))])
+
+            # Combine transformers using ColumnTransformer
             preprocessor = ColumnTransformer([
                 ("OneHotEncoder", oh_transformer, oh_columns),
-                ("OrdinalEncoder", ordinal_encoder, or_columns),
-                ("PowerTransformer", transform_pipe, transform_columns),
+                ("Ordinal_Encoder", ordinal_encoder, or_columns),
+                ("Transformer", transform_pipe, transform_columns),
                 ("StandardScaler", numeric_transformer, num_features)
             ])
-            
-            logging.info("Preprocessing pipeline created successfully.")
+
+            logging.info("Data transformation pipeline created successfully")
             return preprocessor
         except Exception as e:
             raise USvisaException(e, sys)
 
     def initiate_data_transformation(self) -> DataTransformationArtifact:
         """
-        Executes data transformation, including preprocessing, feature engineering, and handling class imbalance.
+        Execute the data transformation steps.
         """
         try:
-            # Ensure validation has passed before proceeding
             if not self.data_validation_artifact.validation_status:
                 raise Exception(self.data_validation_artifact.message)
-            
-            logging.info("Starting data transformation process.")
-            preprocessor = self.get_data_transformer_object()
-            
-            # Load train and test datasets
+
+            logging.info("Starting data transformation process")
+
+            # Load datasets
             train_df = self.read_data(self.data_ingestion_artifact.trained_file_path)
             test_df = self.read_data(self.data_ingestion_artifact.test_file_path)
-            
+
+            # Separate input features and target
+            input_feature_train_df, target_feature_train_df = train_df.drop(columns=[TARGET_COLUMN]), train_df[TARGET_COLUMN]
+            input_feature_test_df, target_feature_test_df = test_df.drop(columns=[TARGET_COLUMN]), test_df[TARGET_COLUMN]
+
+            # Feature Engineering - Adding 'company_age'
+            input_feature_train_df['company_age'] = CURRENT_YEAR - input_feature_train_df['yr_of_estab']
+            input_feature_test_df['company_age'] = CURRENT_YEAR - input_feature_test_df['yr_of_estab']
+
+            # Drop unnecessary columns
             drop_cols = self._schema_config['drop_columns']
-            
-            def preprocess_data(df: pd.DataFrame) -> pd.DataFrame:
-                """Adds derived features and removes unnecessary columns."""
-                df['company_age'] = CURRENT_YEAR - df['yr_of_estab']
-                return drop_columns(df, drop_cols)
-            
-            # Split input features and target variable
-            input_feature_train_df = preprocess_data(train_df.drop(columns=[TARGET_COLUMN]))
-            target_feature_train_df = train_df[TARGET_COLUMN].replace(TargetValueMapping()._asdict())
-            
-            input_feature_test_df = preprocess_data(test_df.drop(columns=[TARGET_COLUMN]))
-            target_feature_test_df = test_df[TARGET_COLUMN].replace(TargetValueMapping()._asdict())
-            
-            logging.info("Applying preprocessing transformation.")
+            input_feature_train_df = drop_columns(input_feature_train_df, drop_cols)
+            input_feature_test_df = drop_columns(input_feature_test_df, drop_cols)
+
+            # Encode target labels
+            target_feature_train_df = target_feature_train_df.replace(TargetValueMapping()._asdict())
+            target_feature_test_df = target_feature_test_df.replace(TargetValueMapping()._asdict())
+
+            # Get transformer object and apply transformations
+            preprocessor = self.get_data_transformer_object()
             input_feature_train_arr = preprocessor.fit_transform(input_feature_train_df)
             input_feature_test_arr = preprocessor.transform(input_feature_test_df)
-            
-            # Handle class imbalance using SMOTEENN
-            logging.info("Applying SMOTEENN to balance dataset.")
+
+            # Apply SMOTEENN for handling imbalances
             smt = SMOTEENN(sampling_strategy="minority")
             input_feature_train_final, target_feature_train_final = smt.fit_resample(input_feature_train_arr, target_feature_train_df)
             input_feature_test_final, target_feature_test_final = smt.fit_resample(input_feature_test_arr, target_feature_test_df)
-            
-            # Combine features and target into a single array
+
+            # Combine input and target arrays
             train_arr = np.c_[input_feature_train_final, np.array(target_feature_train_final)]
             test_arr = np.c_[input_feature_test_final, np.array(target_feature_test_final)]
-            
-            # Save transformed data and preprocessing object
-            logging.info("Saving transformed data and preprocessing object.")
+
+            # Save transformed objects
             save_object(self.data_transformation_config.transformed_object_file_path, preprocessor)
             save_numpy_array_data(self.data_transformation_config.transformed_train_file_path, train_arr)
             save_numpy_array_data(self.data_transformation_config.transformed_test_file_path, test_arr)
-            
-            logging.info("Data transformation completed successfully.")
+
+            logging.info("Data transformation completed successfully")
+
+            # Create and return transformation artifact
             return DataTransformationArtifact(
                 transformed_object_file_path=self.data_transformation_config.transformed_object_file_path,
                 transformed_train_file_path=self.data_transformation_config.transformed_train_file_path,

@@ -1,0 +1,66 @@
+ # Stage 1: Data Ingestion
+
+stages:
+  data_ingestion:
+    cmd: python us_visa/pipeline/stage_01_data_ingestion.py
+    deps:
+      - us_visa/pipeline/stage_01_data_ingestion.py
+      - us_visa/utils/main_utils.py
+      - us_visa/data_access/usvisa_data.py
+      - us_visa/entity/config_entity.py
+      - us_visa/entity/artifact_entity.py
+    outs:
+      - artifacts/data_ingestion/
+      
+
+ # Stage 2: Data Validation
+
+  data_validation:
+    cmd: python us_visa/pipeline/stage_02_data_validation.py
+    deps:
+      - us_visa/pipeline/stage_02_data_validation.py
+      - us_visa/entity/config_entity.py
+      - us_visa/entity/artifact_entity.py
+      - us_visa/data_access/usvisa_data.py
+      - us_visa/utils/main_utils.py
+      - config/schema.yaml
+      - artifacts/data_ingestion/train.csv
+      - artifacts/data_ingestion/test.csv
+    outs:
+      - artifacts/data_validation/
+
+# Stage 3: Data Transformation
+
+  data_transformation:
+    cmd: python us_visa/pipeline/stage_03_data_transformation.py
+    deps:
+      - us_visa/pipeline/stage_03_data_transformation.py
+      - us_visa/entity/config_entity.py
+      - us_visa/entity/artifact_entity.py
+      - us_visa/utils/main_utils.py
+      - us_visa/entity/estimator.py
+      - config/schema.yaml
+      - artifacts/data_ingestion/train.csv
+      - artifacts/data_ingestion/test.csv
+      - artifacts/data_validation/report.yaml
+    outs:
+      - artifacts/data_transformation/
+
+# Stage 4: Model Training
+
+  model_trainer:
+    cmd: python us_visa/pipeline/stage_04_model_trainer.py
+    deps:
+      - us_visa/pipeline/stage_04_model_trainer.py
+      - us_visa/utils/main_utils.py
+      - us_visa/utils/optuna_tuner.py
+      - us_visa/utils/mlflow.py
+      - us_visa/entity/config_entity.py
+      - us_visa/entity/artifact_entity.py
+      - us_visa/entity/estimator.py
+      - artifacts/data_transformation/transformed_train.npy
+      - artifacts/data_transformation/transformed_test.npy
+      - artifacts/data_transformation/preprocessor.pkl
+    outs:
+      - artifacts/model_trainer/
+

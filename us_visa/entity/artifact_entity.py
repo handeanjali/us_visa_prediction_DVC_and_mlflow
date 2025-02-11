@@ -13,6 +13,7 @@ class DataValidationArtifact:
     validation_status:bool
     message: str
     drift_report_file_path: str
+    
 
 
 
@@ -35,17 +36,15 @@ class ClassificationMetricArtifact:
 class ModelTrainerArtifact:
     trained_model_file_path:str 
     metric_artifact:ClassificationMetricArtifact
-    trained_model:str
-
 
 
 
 @dataclass
 class ModelEvaluationArtifact:
-    is_model_accepted:bool
-    changed_accuracy:float
-   # s3_model_path:str 
-    trained_model_path:str
+    is_model_accepted: bool
+    best_model_path: str
+    trained_model_path: str
+    changed_accuracy: float
 
 
 

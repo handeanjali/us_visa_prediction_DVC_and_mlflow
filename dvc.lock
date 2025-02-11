@@ -1,0 +1,166 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python us_visa/pipeline/stage_01_data_ingestion.py
+    deps:
+    - path: us_visa/data_access/usvisa_data.py
+      hash: md5
+      md5: caade665b4dd80fb7e1766e922162c68
+      size: 2098
+    - path: us_visa/entity/artifact_entity.py
+      hash: md5
+      md5: 1d17577eef65540406ff9d37f43d3ec4
+      size: 939
+    - path: us_visa/entity/config_entity.py
+      hash: md5
+      md5: 4d51fccb872fbca9f412b7105a06b74e
+      size: 3378
+    - path: us_visa/pipeline/stage_01_data_ingestion.py
+      hash: md5
+      md5: df0c736bcc295c40b5a9a88f04f94447
+      size: 876
+    - path: us_visa/utils/main_utils.py
+      hash: md5
+      md5: bf34f7d65e0a891368842344284bdbf4
+      size: 4656
+    outs:
+    - path: artifacts/data_ingestion/
+      hash: md5
+      md5: fcbfbc144b74cc95a5f018ede7c34f3c.dir
+      size: 1881530
+      nfiles: 2
+  data_validation:
+    cmd: python us_visa/pipeline/stage_02_data_validation.py
+    deps:
+    - path: artifacts/data_ingestion/test.csv
+      hash: md5
+      md5: 257cbc7225e4138fadbdc32c67f47d44
+      size: 376752
+    - path: artifacts/data_ingestion/train.csv
+      hash: md5
+      md5: d1412ce26d4d3f6ca2fcd659cef69f64
+      size: 1504778
+    - path: config/schema.yaml
+      hash: md5
+      md5: e3eff9c598b126af598a7f2e234aa827
+      size: 1060
+    - path: us_visa/data_access/usvisa_data.py
+      hash: md5
+      md5: caade665b4dd80fb7e1766e922162c68
+      size: 2098
+    - path: us_visa/entity/artifact_entity.py
+      hash: md5
+      md5: 1d17577eef65540406ff9d37f43d3ec4
+      size: 939
+    - path: us_visa/entity/config_entity.py
+      hash: md5
+      md5: 4d51fccb872fbca9f412b7105a06b74e
+      size: 3378
+    - path: us_visa/pipeline/stage_02_data_validation.py
+      hash: md5
+      md5: e8e55848adc0edaa00da41d6f3b5468f
+      size: 1068
+    - path: us_visa/utils/main_utils.py
+      hash: md5
+      md5: bf34f7d65e0a891368842344284bdbf4
+      size: 4656
+    outs:
+    - path: artifacts/data_validation/
+      hash: md5
+      md5: aa33cfe9d00e63d66eaf163646d52faf.dir
+      size: 1924208
+      nfiles: 1
+  data_transformation:
+    cmd: python us_visa/pipeline/stage_03_data_transformation.py
+    deps:
+    - path: artifacts/data_ingestion/test.csv
+      hash: md5
+      md5: 257cbc7225e4138fadbdc32c67f47d44
+      size: 376752
+    - path: artifacts/data_ingestion/train.csv
+      hash: md5
+      md5: d1412ce26d4d3f6ca2fcd659cef69f64
+      size: 1504778
+    - path: artifacts/data_validation/report.yaml
+      hash: md5
+      md5: 58e0462b5aa214724363076294712cab
+      size: 1924208
+    - path: config/schema.yaml
+      hash: md5
+      md5: e3eff9c598b126af598a7f2e234aa827
+      size: 1060
+    - path: us_visa/entity/artifact_entity.py
+      hash: md5
+      md5: 1d17577eef65540406ff9d37f43d3ec4
+      size: 939
+    - path: us_visa/entity/config_entity.py
+      hash: md5
+      md5: 4d51fccb872fbca9f412b7105a06b74e
+      size: 3378
+    - path: us_visa/entity/estimator.py
+      hash: md5
+      md5: c6ce623891ca0125c27e0698542c970f
+      size: 1884
+    - path: us_visa/pipeline/stage_03_data_transformation.py
+      hash: md5
+      md5: dfdf815eec709172192cbda217ecab51
+      size: 1240
+    - path: us_visa/utils/main_utils.py
+      hash: md5
+      md5: bf34f7d65e0a891368842344284bdbf4
+      size: 4656
+    outs:
+    - path: artifacts/data_transformation/
+      hash: md5
+      md5: 5f35ceef17c6916c911801fe46d28ad0.dir
+      size: 3402252
+      nfiles: 3
+  model_trainer:
+    cmd: python us_visa/pipeline/stage_04_model_trainer.py
+    deps:
+    - path: artifacts/data_transformation/preprocessor.pkl
+      hash: md5
+      md5: 2ee85aed7e819878b37e3de3f556047c
+      size: 3596
+    - path: artifacts/data_transformation/transformed_test.npy
+      hash: md5
+      md5: c43aee57e8391354b1e51266fd1af3e7
+      size: 666928
+    - path: artifacts/data_transformation/transformed_train.npy
+      hash: md5
+      md5: 1da70c0e8fe6155b87de7d9abf5b4a90
+      size: 2731728
+    - path: us_visa/entity/artifact_entity.py
+      hash: md5
+      md5: 1d17577eef65540406ff9d37f43d3ec4
+      size: 939
+    - path: us_visa/entity/config_entity.py
+      hash: md5
+      md5: 4d51fccb872fbca9f412b7105a06b74e
+      size: 3378
+    - path: us_visa/entity/estimator.py
+      hash: md5
+      md5: c6ce623891ca0125c27e0698542c970f
+      size: 1884
+    - path: us_visa/pipeline/stage_04_model_trainer.py
+      hash: md5
+      md5: f1abf7a3eeb63fe843651587500a7c5b
+      size: 1029
+    - path: us_visa/utils/main_utils.py
+      hash: md5
+      md5: bf34f7d65e0a891368842344284bdbf4
+      size: 4656
+    - path: us_visa/utils/mlflow.py
+      hash: md5
+      md5: b770fd31df5351119d67a3968c6c2688
+      size: 440
+    - path: us_visa/utils/optuna_tuner.py
+      hash: md5
+      md5: f156ee43db53bd4698f49b6538a18aec
+      size: 1171
+    outs:
+    - path: artifacts/model_trainer/
+      hash: md5
+      md5: dd3eda235544f726875cfbcea141ef07.dir
+      size: 4798955
+      nfiles: 1

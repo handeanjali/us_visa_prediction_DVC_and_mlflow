@@ -14,6 +14,10 @@ ARTIFACT_DIR: str = "artifact"
 TRAIN_FILE_NAME: str = "train.csv"
 TEST_FILE_NAME: str = "test.csv"
 
+TRAIN_TARGET_FILE_NAME:str = "train_target.csv"
+TEST_TARGET_FILE_NAME:str = "test_target.csv"
+
+
 FILE_NAME: str = "usvisa.csv"
 MODEL_FILE_NAME = "model.pkl"
 
@@ -28,6 +32,7 @@ SCHEMA_FILE_PATH = os.path.join("config", "schema.yaml")
 AWS_ACCESS_KEY_ID_ENV_KEY = "AWS_ACCESS_KEY_ID"
 AWS_SECRET_ACCESS_KEY_ENV_KEY = "AWS_SECRET_ACCESS_KEY"
 REGION_NAME = "us-east-1"
+
 
 
 
@@ -67,15 +72,25 @@ MODEL_TRAINER_TRAINED_MODEL_DIR: str = "trained_model"
 MODEL_TRAINER_TRAINED_MODEL_NAME: str = "model.pkl"
 MODEL_TRAINER_EXPECTED_SCORE: float = 0.6
 MODEL_TRAINER_MODEL_CONFIG_FILE_PATH: str = os.path.join("config", "model.yaml")
+MODEL_REPORT:str = "report.yaml"
+MLFLOW_EXPERIMENT_NAME:str = "usvisa_experiment"
+MODEL_ARTIFACT_REPORT:str = "model_artifact_report.yaml"
 
 
 """
 MODEL EVALUATION related constant 
 """
-MODEL_EVALUATION_CHANGED_THRESHOLD_SCORE: float = 0.02
-MODEL_BUCKET_NAME = "usvisa-model2024"
-MODEL_PUSHER_S3_KEY = "model-registry"
+MODEL_EVALUATION_DIR_NAME = "model_evaluation" 
+EVALUATION_REPORT_PATH = "evaluation_report.YAML"
+METRIC_THRESHOLD = 0.75
+BEST_MODEL_PATH = "best_model.pkl"
 
 
 APP_HOST = "0.0.0.0"
 APP_PORT = 8080
+
+# Saved Model 
+SAVED_MODEL_CONFIG_KEY='saved_model_config'
+SAVED_MODEL_DIR='directory'
+SAVED_MODEL_OBJECT='model_object'
+SAVED_MODEL_REPORT='report'

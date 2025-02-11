@@ -22,3 +22,6 @@ class USvisaException(Exception):
 
     def __str__(self):
         return self.error_message
+    
+    def __repr__(self):
+        return USvisaException.__name__.str()
