@@ -9,6 +9,7 @@ from us_visa.exception import USvisaException
 from us_visa.logger import logging
 from us_visa.utils.main_utils import read_yaml_file
 from pandas import DataFrame
+import joblib
 
 
 class USvisaData:
@@ -85,33 +86,31 @@ class USvisaData:
 
         except Exception as e:
             raise USvisaException(e, sys) from e
+        
+
 
 class USvisaClassifier:
-    def __init__(self,prediction_pipeline_config: USvisaPredictorConfig = USvisaPredictorConfig(),) -> None:
-        """
-        :param prediction_pipeline_config: Configuration for prediction the value
-        """
+    def __init__(self, prediction_pipeline_config: USvisaPredictorConfig = USvisaPredictorConfig()) -> None:
         try:
-            # self.schema_config = read_yaml_file(SCHEMA_FILE_PATH)
             self.prediction_pipeline_config = prediction_pipeline_config
+            self.model = self.load_model()
         except Exception as e:
             raise USvisaException(e, sys)
 
+    def load_model(self):
+        try:
+            #model_path = self.prediction_pipeline_config.model_file_path
+            model_path = r"artifacts\model_trainer\model.pkl"
+            model = joblib.load(model_path)
+            logging.info("Model loaded successfully.")
+            return model
+        except Exception as e:
+            raise USvisaException(e, sys)
 
     def predict(self, dataframe) -> str:
-        """
-        This is the method of USvisaClassifier
-        Returns: Prediction in string format
-        """
         try:
             logging.info("Entered predict method of USvisaClassifier class")
-            model = USvisaEstimator(
-                bucket_name=self.prediction_pipeline_config.model_bucket_name,
-                model_path=self.prediction_pipeline_config.model_file_path,
-            )
-            result =  model.predict(dataframe)
-            
+            result = self.model.predict(dataframe)
             return result
-        
         except Exception as e:
             raise USvisaException(e, sys)
