@@ -11,9 +11,9 @@ us_visa/components/data_ingestion.py
 us_visa/components/data_transformation.py
 us_visa/components/data_validation.py
 us_visa/components/model_evaluation.py
-us_visa/components/model_pusher.py
 us_visa/components/model_trainer.py
 us_visa/configuration/__init__.py
+us_visa/configuration/configuration.py
 us_visa/configuration/mongo_db_connection.py
 us_visa/constants/__init__.py
 us_visa/data_access/__init__.py
@@ -26,6 +26,12 @@ us_visa/exception/__init__.py
 us_visa/logger/__init__.py
 us_visa/pipeline/__init__.py
 us_visa/pipeline/prediction_pipeline.py
+us_visa/pipeline/stage_01_data_ingestion.py
+us_visa/pipeline/stage_02_data_validation.py
+us_visa/pipeline/stage_03_data_transformation.py
+us_visa/pipeline/stage_04_model_trainer.py
 us_visa/pipeline/training_pipeline.py
 us_visa/utils/__init__.py
 us_visa/utils/main_utils.py
+us_visa/utils/mlflow.py
+us_visa/utils/optuna_tuner.py

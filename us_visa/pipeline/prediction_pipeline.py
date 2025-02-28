@@ -99,10 +99,11 @@ class USvisaClassifier:
 
     def load_model(self):
         try:
-            #model_path = self.prediction_pipeline_config.model_file_path
-            model_path = r"artifacts\model_trainer\model.pkl"
+            model_path = os.path.join("artifacts", "model_trainer","model.pkl")
+            print(f"Loading model from: {model_path}")
             model = joblib.load(model_path)
             logging.info("Model loaded successfully.")
+            
             return model
         except Exception as e:
             raise USvisaException(e, sys)

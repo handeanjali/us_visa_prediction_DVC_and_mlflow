@@ -1,6 +1,6 @@
 import sys
 import numpy as np
-import pandas as pd
+#import pandas as pd
 from imblearn.combine import SMOTEENN
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler, OneHotEncoder, OrdinalEncoder, PowerTransformer
@@ -13,6 +13,10 @@ from us_visa.exception import USvisaException
 from us_visa.logger import logging
 from us_visa.utils.main_utils import save_object, save_numpy_array_data, read_yaml_file, drop_columns
 from us_visa.entity.estimator import TargetValueMapping
+
+import pandas as pd
+pd.set_option('future.no_silent_downcasting', True)
+
 
 
 class DataTransformation:
@@ -100,8 +104,11 @@ class DataTransformation:
             input_feature_test_df = drop_columns(input_feature_test_df, drop_cols)
 
             # Encode target labels
-            target_feature_train_df = target_feature_train_df.replace(TargetValueMapping()._asdict())
-            target_feature_test_df = target_feature_test_df.replace(TargetValueMapping()._asdict())
+            #target_feature_train_df = target_feature_train_df.replace(TargetValueMapping()._asdict())
+            #target_feature_test_df = target_feature_test_df.replace(TargetValueMapping()._asdict())
+            target_feature_train_df = target_feature_train_df.replace(TargetValueMapping()._asdict()).infer_objects(copy=False)
+            target_feature_test_df = target_feature_test_df.replace(TargetValueMapping()._asdict()).infer_objects(copy=False)
+
 
             # Get transformer object and apply transformations
             preprocessor = self.get_data_transformer_object()

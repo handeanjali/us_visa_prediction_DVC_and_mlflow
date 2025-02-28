@@ -9,16 +9,16 @@ stages:
       size: 2098
     - path: us_visa/entity/artifact_entity.py
       hash: md5
-      md5: 1d17577eef65540406ff9d37f43d3ec4
-      size: 939
+      md5: dcbfe6dcbd52fb3d9f4609a878fdf0cf
+      size: 944
     - path: us_visa/entity/config_entity.py
       hash: md5
-      md5: 4d51fccb872fbca9f412b7105a06b74e
-      size: 3378
+      md5: a9634af3e9d193dc948af266d708a3f2
+      size: 3700
     - path: us_visa/pipeline/stage_01_data_ingestion.py
       hash: md5
-      md5: df0c736bcc295c40b5a9a88f04f94447
-      size: 876
+      md5: 98f7c67c1db4e513e0080ae0d96d3041
+      size: 1177
     - path: us_visa/utils/main_utils.py
       hash: md5
       md5: bf34f7d65e0a891368842344284bdbf4
@@ -26,7 +26,7 @@ stages:
     outs:
     - path: artifacts/data_ingestion/
       hash: md5
-      md5: fcbfbc144b74cc95a5f018ede7c34f3c.dir
+      md5: 0dfec1e5d2cf6862089953d31083a8d8.dir
       size: 1881530
       nfiles: 2
   data_validation:
@@ -34,12 +34,12 @@ stages:
     deps:
     - path: artifacts/data_ingestion/test.csv
       hash: md5
-      md5: 257cbc7225e4138fadbdc32c67f47d44
-      size: 376752
+      md5: a8ef93e58c9071c818b944faf2dadea7
+      size: 376367
     - path: artifacts/data_ingestion/train.csv
       hash: md5
-      md5: d1412ce26d4d3f6ca2fcd659cef69f64
-      size: 1504778
+      md5: 4096cba8bf168cf395ab48373c7e4495
+      size: 1505163
     - path: config/schema.yaml
       hash: md5
       md5: e3eff9c598b126af598a7f2e234aa827
@@ -50,16 +50,16 @@ stages:
       size: 2098
     - path: us_visa/entity/artifact_entity.py
       hash: md5
-      md5: 1d17577eef65540406ff9d37f43d3ec4
-      size: 939
+      md5: dcbfe6dcbd52fb3d9f4609a878fdf0cf
+      size: 944
     - path: us_visa/entity/config_entity.py
       hash: md5
-      md5: 4d51fccb872fbca9f412b7105a06b74e
-      size: 3378
+      md5: a9634af3e9d193dc948af266d708a3f2
+      size: 3700
     - path: us_visa/pipeline/stage_02_data_validation.py
       hash: md5
-      md5: e8e55848adc0edaa00da41d6f3b5468f
-      size: 1068
+      md5: db50811249f09358b7d761c7aacf37e8
+      size: 1498
     - path: us_visa/utils/main_utils.py
       hash: md5
       md5: bf34f7d65e0a891368842344284bdbf4
@@ -67,44 +67,44 @@ stages:
     outs:
     - path: artifacts/data_validation/
       hash: md5
-      md5: aa33cfe9d00e63d66eaf163646d52faf.dir
-      size: 1924208
+      md5: 8631d3650f193de0973802502b92e4f5.dir
+      size: 2129670
       nfiles: 1
   data_transformation:
     cmd: python us_visa/pipeline/stage_03_data_transformation.py
     deps:
     - path: artifacts/data_ingestion/test.csv
       hash: md5
-      md5: 257cbc7225e4138fadbdc32c67f47d44
-      size: 376752
+      md5: a8ef93e58c9071c818b944faf2dadea7
+      size: 376367
     - path: artifacts/data_ingestion/train.csv
       hash: md5
-      md5: d1412ce26d4d3f6ca2fcd659cef69f64
-      size: 1504778
+      md5: 4096cba8bf168cf395ab48373c7e4495
+      size: 1505163
     - path: artifacts/data_validation/report.yaml
       hash: md5
-      md5: 58e0462b5aa214724363076294712cab
-      size: 1924208
+      md5: 0ea753d6589b7fc3931a1f41b7cfa6aa
+      size: 2129670
     - path: config/schema.yaml
       hash: md5
       md5: e3eff9c598b126af598a7f2e234aa827
       size: 1060
     - path: us_visa/entity/artifact_entity.py
       hash: md5
-      md5: 1d17577eef65540406ff9d37f43d3ec4
-      size: 939
+      md5: dcbfe6dcbd52fb3d9f4609a878fdf0cf
+      size: 944
     - path: us_visa/entity/config_entity.py
       hash: md5
-      md5: 4d51fccb872fbca9f412b7105a06b74e
-      size: 3378
+      md5: a9634af3e9d193dc948af266d708a3f2
+      size: 3700
     - path: us_visa/entity/estimator.py
       hash: md5
-      md5: c6ce623891ca0125c27e0698542c970f
-      size: 1884
+      md5: 186cbf8ecc25898596adca0e4e4a79d6
+      size: 1896
     - path: us_visa/pipeline/stage_03_data_transformation.py
       hash: md5
-      md5: dfdf815eec709172192cbda217ecab51
-      size: 1240
+      md5: 4cf978bea8fe4f87678c6a03604495bd
+      size: 1628
     - path: us_visa/utils/main_utils.py
       hash: md5
       md5: bf34f7d65e0a891368842344284bdbf4
@@ -112,40 +112,40 @@ stages:
     outs:
     - path: artifacts/data_transformation/
       hash: md5
-      md5: 5f35ceef17c6916c911801fe46d28ad0.dir
-      size: 3402252
+      md5: 796ed0ced2dc7dff7ca860e44a66c304.dir
+      size: 3455252
       nfiles: 3
   model_trainer:
     cmd: python us_visa/pipeline/stage_04_model_trainer.py
     deps:
     - path: artifacts/data_transformation/preprocessor.pkl
       hash: md5
-      md5: 2ee85aed7e819878b37e3de3f556047c
+      md5: ae80fd69dd33c5538718d1fb7d42d171
       size: 3596
     - path: artifacts/data_transformation/transformed_test.npy
       hash: md5
-      md5: c43aee57e8391354b1e51266fd1af3e7
-      size: 666928
+      md5: 1f8252e59aa35cc2d8815049a4d5acd9
+      size: 709528
     - path: artifacts/data_transformation/transformed_train.npy
       hash: md5
-      md5: 1da70c0e8fe6155b87de7d9abf5b4a90
-      size: 2731728
+      md5: 473c11cee5f2acf20e49c7f1317f88c0
+      size: 2742128
     - path: us_visa/entity/artifact_entity.py
       hash: md5
-      md5: 1d17577eef65540406ff9d37f43d3ec4
-      size: 939
+      md5: dcbfe6dcbd52fb3d9f4609a878fdf0cf
+      size: 944
     - path: us_visa/entity/config_entity.py
       hash: md5
-      md5: 4d51fccb872fbca9f412b7105a06b74e
-      size: 3378
+      md5: a9634af3e9d193dc948af266d708a3f2
+      size: 3700
     - path: us_visa/entity/estimator.py
       hash: md5
-      md5: c6ce623891ca0125c27e0698542c970f
-      size: 1884
+      md5: 186cbf8ecc25898596adca0e4e4a79d6
+      size: 1896
     - path: us_visa/pipeline/stage_04_model_trainer.py
       hash: md5
-      md5: f1abf7a3eeb63fe843651587500a7c5b
-      size: 1029
+      md5: 3ae7c0419c67d771f2864cfc305b85f8
+      size: 1341
     - path: us_visa/utils/main_utils.py
       hash: md5
       md5: bf34f7d65e0a891368842344284bdbf4
@@ -161,6 +161,6 @@ stages:
     outs:
     - path: artifacts/model_trainer/
       hash: md5
-      md5: dd3eda235544f726875cfbcea141ef07.dir
-      size: 4798955
+      md5: e9f8d533d491db3013de95cf32614b0a.dir
+      size: 11738223
       nfiles: 1

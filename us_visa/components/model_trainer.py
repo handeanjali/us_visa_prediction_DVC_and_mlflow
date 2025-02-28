@@ -1,4 +1,4 @@
-import sys
+import sys, os
 from typing import Tuple
 
 import numpy as np
@@ -73,7 +73,11 @@ class ModelTrainer:
             log_metrics({"f1_score": metric_artifact.f1_score, "precision": metric_artifact.precision_score, "recall": metric_artifact.recall_score})
             end_mlflow_run()
             
+
+            os.makedirs(os.path.dirname(self.model_trainer_config.trained_model_file_path), exist_ok=True)
             save_object(self.model_trainer_config.trained_model_file_path, usvisa_model)
+            logging.info(f"Model successfully saved at: {self.model_trainer_config.trained_model_file_path}")
+
 
             model_trainer_artifact = ModelTrainerArtifact(
                 trained_model_file_path=self.model_trainer_config.trained_model_file_path,

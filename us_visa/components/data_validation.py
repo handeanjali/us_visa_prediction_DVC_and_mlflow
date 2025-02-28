@@ -1,8 +1,11 @@
 import json
 import sys
 import pandas as pd
-from evidently.model_profile import Profile
-from evidently.model_profile.sections import DataDriftProfileSection
+#from evidently.model_profile import Profile
+#from evidently.model_profile.sections import DataDriftProfileSection
+from evidently.report import Report
+from evidently.metrics import DataDriftTable, DatasetDriftMetric
+
 
 from pandas import DataFrame
 
@@ -82,15 +85,34 @@ class DataValidation:
         Detects dataset drift between reference and current datasets.
         """
         try:
-            data_drift_profile = Profile(sections=[DataDriftProfileSection()])
-            data_drift_profile.calculate(reference_df, current_df)
+            #data_drift_profile = Profile(sections=[DataDriftProfileSection()])
+            #data_drift_profile.calculate(reference_df, current_df)
             
-            json_report = json.loads(data_drift_profile.json())
+            #json_report = json.loads(data_drift_profile.json())
+            #write_yaml_file(file_path=self.data_validation_config.drift_report_file_path, content=json_report)
+            
+            #drift_status = json_report["data_drift"]["data"]["metrics"]["dataset_drift"]
+            #logging.info(f"Dataset drift detected: {drift_status}")
+            #return drift_status
+
+            # Create a report with the new Evidently metrics
+            data_drift_report = Report(metrics=[
+                                        DataDriftTable(),
+                                        DatasetDriftMetric(),
+                ])
+
+            # Run the report on the reference and current datasets
+            data_drift_report.run(reference_data=reference_df, current_data=current_df)
+
+            # Convert report to JSON and save
+            json_report = json.loads(data_drift_report.json())
             write_yaml_file(file_path=self.data_validation_config.drift_report_file_path, content=json_report)
-            
-            drift_status = json_report["data_drift"]["data"]["metrics"]["dataset_drift"]
+
+            # Check drift status from the new report structure
+            drift_status = json_report["metrics"][1]["result"]["dataset_drift"]
             logging.info(f"Dataset drift detected: {drift_status}")
             return drift_status
+
         except Exception as e:
             raise USvisaException(e, sys)
 

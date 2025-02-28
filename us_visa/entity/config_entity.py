@@ -75,6 +75,16 @@ class ModelEvaluationConfig:
     evaluation_report_path: str = os.path.join(training_pipeline_config.artifact_dir,MODEL_EVALUATION_DIR_NAME,EVALUATION_REPORT_PATH)
     metric_threshold: float = METRIC_THRESHOLD
 
+
+@dataclass
+class USvisaPredictorConfig:
+    model_trainer_dir: str = os.path.join(training_pipeline_config.artifact_dir, MODEL_TRAINER_DIR_NAME)
+    model_file_path: str = os.path.join(model_trainer_dir, MODEL_TRAINER_TRAINED_MODEL_DIR, MODEL_FILE_NAME)
+
+    #model_file_path: str = os.path.join("artifacts", "model_trainer", MODEL_FILE_NAME)
+    trained_model_file_path: str = MODEL_FILE_NAME
+    #model_bucket_name: str = MODEL_BUCKET_NAME
+
 '''
 @dataclass
 class ModelPusherConfig:
@@ -84,10 +94,7 @@ class ModelPusherConfig:
 
 '''
 
-@dataclass
-class USvisaPredictorConfig:
-    model_file_path: str = MODEL_FILE_NAME
-    #model_bucket_name: str = MODEL_BUCKET_NAME
+
 
 
 
